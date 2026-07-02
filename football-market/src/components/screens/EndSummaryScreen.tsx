@@ -143,7 +143,7 @@ function PlayerRevealCard({
                   <YAxis hide domain={['auto', 'auto']} />
                   <Tooltip
                     contentStyle={{ background: '#0e1420', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 8, fontSize: 11 }}
-                    formatter={(v: number) => [`€${v}M`, 'Value']}
+                    formatter={(v) => [`€${v}M`, 'Value']}
                     labelStyle={{ color: '#8899b4' }}
                   />
                   <Line
