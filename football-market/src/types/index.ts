@@ -1,5 +1,16 @@
 export type Position = 'GK' | 'DEF' | 'MID' | 'WNG' | 'ST';
 
+// Stats that can be randomly shown/hidden on player cards
+export type StatKey =
+  | 'cleanSheets'
+  | 'goals'
+  | 'assists'
+  | 'minutesPlayed'
+  | 'leagueFinish'
+  | 'contractYearsRemaining'
+  | 'internationalCaps'
+  | 'age';
+
 export type Window =
   | 'SUMMER_2021'
   | 'WINTER_2022'
@@ -99,6 +110,8 @@ export interface GameRun {
   newsHistory: NewsItem[];
   finalProfit?: number;
   grade?: Grade;
+  // Which stats are visible on player cards this run (randomly chosen per position)
+  statVisibility: Record<Position, StatKey[]>;
 }
 
 export interface HallOfFameEntry {

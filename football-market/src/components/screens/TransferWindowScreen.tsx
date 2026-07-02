@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowRight, RefreshCw, Lock, ChevronRight } from 'lucide-react';
-import { Button, Card, StarRating, PosBadge } from '../ui';
+import { Button, Card, StarRating, PosBadge, Badge } from '../ui';
 import { PlayerCard } from '../game/PlayerCard';
 import { useGameStore } from '../../store/gameStore';
 import { PLAYER_MAP, WINDOW_LABELS, WINDOWS } from '../../data/players';
@@ -198,6 +198,7 @@ function TransferModal({
                     selected={selectedId === pid}
                     onSelect={() => setSelectedId(pid)}
                     alreadySold={alreadySold}
+                    visibleStats={currentRun.statVisibility[position]}
                   />
                 </motion.div>
               );

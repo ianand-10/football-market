@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
-import type { Player, Window } from '../../types';
-import { Card, Badge, PosBadge, StatRow, ValueTag } from '../ui';
+import type { Player, Window, StatKey } from '../../types';
+import { Card, PosBadge, StatRow } from '../ui';
 import { formatValue } from '../../utils/gameEngine';
 
 interface PlayerCardProps {
@@ -13,6 +13,7 @@ interface PlayerCardProps {
   showSaleValue?: boolean;
   dimmed?: boolean;
   alreadySold?: boolean;
+  visibleStats?: StatKey[]; // if undefined, show all stats (backwards-compat)
 }
 
 function ordinal(n: number): string {
@@ -20,6 +21,11 @@ function ordinal(n: number): string {
   if (n === 2) return '2nd';
   if (n === 3) return '3rd';
   return `${n}th`;
+}
+
+function show(key: StatKey, visibleStats?: StatKey[]): boolean {
+  if (!visibleStats) return true; // no restriction = show all
+  return visibleStats.includes(key);
 }
 
 export function PlayerCard({
@@ -32,6 +38,7 @@ export function PlayerCard({
   showSaleValue = false,
   dimmed = false,
   alreadySold = false,
+  visibleStats,
 }: PlayerCardProps) {
   const season = player.seasons[window];
   if (!season) return null;
@@ -70,7 +77,9 @@ export function PlayerCard({
         <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-2">
             <PosBadge position={player.position} />
-            <span className="text-[#8899b4] text-xs">{season.internationalCaps} caps</span>
+            {show('internationalCaps', visibleStats) && (
+              <span className="text-[#8899b4] text-xs">{season.internationalCaps} caps</span>
+            )}
           </div>
           <span className="text-xl leading-none">{player.nationalityFlag}</span>
         </div>
@@ -78,25 +87,42 @@ export function PlayerCard({
         {/* ID */}
         <div className="mb-3">
           <div className="font-mono text-lg font-bold text-white tracking-wider">{playerId}</div>
-          <div className="text-xs text-[#8899b4] mt-0.5">Age {season.age} · {season.leagueName}</div>
+          <div className="text-xs text-[#8899b4] mt-0.5 flex gap-2 flex-wrap">
+            {show('age', visibleStats) && <span>Age {season.age}</span>}
+            <span>{season.leagueName}</span>
+          </div>
         </div>
 
         {/* Stats grid */}
         <div className="space-y-0.5 mb-3">
           {isGK ? (
             <>
-              <StatRow label="Clean Sheets" value={season.cleanSheets ?? 0} />
-              <StatRow label="Minutes Played" value={`${(season.minutesPlayed / 90).toFixed(0)} apps`} />
+              {show('cleanSheets', visibleStats) && (
+                <StatRow label="Clean Sheets" value={season.cleanSheets ?? 0} />
+              )}
+              {show('minutesPlayed', visibleStats) && (
+                <StatRow label="Minutes Played" value={`${(season.minutesPlayed / 90).toFixed(0)} apps`} />
+              )}
             </>
           ) : (
             <>
-              <StatRow label="Goals" value={season.goals ?? 0} />
-              <StatRow label="Assists" value={season.assists ?? 0} />
-              <StatRow label="Minutes" value={`${(season.minutesPlayed / 90).toFixed(0)} apps`} />
+              {show('goals', visibleStats) && (
+                <StatRow label="Goals" value={season.goals ?? 0} />
+              )}
+              {show('assists', visibleStats) && (
+                <StatRow label="Assists" value={season.assists ?? 0} />
+              )}
+              {show('minutesPlayed', visibleStats) && (
+                <StatRow label="Minutes" value={`${(season.minutesPlayed / 90).toFixed(0)} apps`} />
+              )}
             </>
           )}
-          <StatRow label="League Finish" value={ordinal(season.leagueFinish)} />
-          <StatRow label="Contract" value={`${season.contractYearsRemaining}y remaining`} />
+          {show('leagueFinish', visibleStats) && (
+            <StatRow label="League Finish" value={ordinal(season.leagueFinish)} />
+          )}
+          {show('contractYearsRemaining', visibleStats) && (
+            <StatRow label="Contract" value={`${season.contractYearsRemaining}y remaining`} />
+          )}
         </div>
 
         {/* Value */}

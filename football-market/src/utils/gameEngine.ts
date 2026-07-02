@@ -1,4 +1,4 @@
-import type { Window, Position, Grade, GameRun, Transaction, SquadSlot } from '../types';
+import type { Window, Position, Grade, GameRun, Transaction, SquadSlot, StatKey } from '../types';
 import { PLAYERS, WINDOWS, getPlayersByPosition } from '../data/players';
 
 export const POSITIONS: Position[] = ['GK', 'DEF', 'MID', 'WNG', 'ST'];
@@ -93,6 +93,7 @@ export function createNewRun(): GameRun {
     phase: 'DRAFT',
     soldPlayerIds: [],
     newsHistory: [],
+    statVisibility: generateStatVisibility(),
   };
 }
 
@@ -153,4 +154,26 @@ export function getGradeColor(grade: Grade): string {
     case 'D': return '#f97316';
     case 'F': return '#ef4444';
   }
+}
+
+// Optional stats pool — 3 of these 5 are randomly chosen per position per run
+const OPTIONAL_STATS: StatKey[] = ['age', 'minutesPlayed', 'leagueFinish', 'contractYearsRemaining', 'internationalCaps'];
+
+function pickRandom<T>(arr: T[], count: number): T[] {
+  const shuffled = [...arr].sort(() => Math.random() - 0.5);
+  return shuffled.slice(0, count);
+}
+
+export function generateStatVisibility(): Record<Position, StatKey[]> {
+  // Core stats are always shown per position; randomly add 3 of 5 optional stats
+  const gkCore: StatKey[] = ['cleanSheets'];
+  const outfieldCore: StatKey[] = ['goals', 'assists'];
+
+  return {
+    GK:  [...gkCore,       ...pickRandom(OPTIONAL_STATS, 3)],
+    DEF: [...outfieldCore, ...pickRandom(OPTIONAL_STATS, 3)],
+    MID: [...outfieldCore, ...pickRandom(OPTIONAL_STATS, 3)],
+    WNG: [...outfieldCore, ...pickRandom(OPTIONAL_STATS, 3)],
+    ST:  [...outfieldCore, ...pickRandom(OPTIONAL_STATS, 3)],
+  };
 }

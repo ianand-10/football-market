@@ -109,6 +109,7 @@ export function DraftScreen() {
                   showPurchaseValue
                   selected={selectedId === pid}
                   onSelect={() => draftSelectPlayer(position, pid)}
+                  visibleStats={currentRun.statVisibility[position]}
                 />
               </motion.div>
             );
