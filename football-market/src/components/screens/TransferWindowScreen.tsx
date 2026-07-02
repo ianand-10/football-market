@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowRight, RefreshCw, Lock, ChevronRight } from 'lucide-react';
-<<<<<<< HEAD
 import { Button, Card, StarRating, PosBadge, Badge } from '../ui';
-=======
-import { Button, Card, Badge, StarRating, PosBadge } from '../ui';
->>>>>>> b287e6942b69d1304a680c4647f791c467456b63
+import { ArrowRight, RefreshCw, Lock, ChevronRight } from 'lucide-react';
 import { PlayerCard } from '../game/PlayerCard';
 import { useGameStore } from '../../store/gameStore';
 import { PLAYER_MAP, WINDOW_LABELS, WINDOWS } from '../../data/players';
