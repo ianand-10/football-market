@@ -65,30 +65,42 @@ function SquadSlotCard({
       {season && (
         <div className="grid grid-cols-3 gap-2 text-center">
           {player.position === 'GK' ? (
-            <div className="rounded-lg bg-white/4 p-2">
-              <div className="text-base font-bold text-white">{season.cleanSheets ?? 0}</div>
-              <div className="text-xs text-[#4a5568]">Clean Sheets</div>
-            </div>
+            <>
+              {currentRun.statVisibility.GK.includes('cleanSheets') && (
+                <div className="rounded-lg bg-white/4 p-2">
+                  <div className="text-base font-bold text-white">{season.cleanSheets ?? 0}</div>
+                  <div className="text-xs text-[#4a5568]">Clean Sheets</div>
+                </div>
+              )}
+            </>
           ) : (
             <>
-              <div className="rounded-lg bg-white/4 p-2">
-                <div className="text-base font-bold text-white">{season.goals ?? 0}</div>
-                <div className="text-xs text-[#4a5568]">Goals</div>
-              </div>
-              <div className="rounded-lg bg-white/4 p-2">
-                <div className="text-base font-bold text-white">{season.assists ?? 0}</div>
-                <div className="text-xs text-[#4a5568]">Assists</div>
-              </div>
+              {currentRun.statVisibility[player.position].includes('goals') && (
+                <div className="rounded-lg bg-white/4 p-2">
+                  <div className="text-base font-bold text-white">{season.goals ?? 0}</div>
+                  <div className="text-xs text-[#4a5568]">Goals</div>
+                </div>
+              )}
+              {currentRun.statVisibility[player.position].includes('assists') && (
+                <div className="rounded-lg bg-white/4 p-2">
+                  <div className="text-base font-bold text-white">{season.assists ?? 0}</div>
+                  <div className="text-xs text-[#4a5568]">Assists</div>
+                </div>
+              )}
             </>
           )}
-          <div className="rounded-lg bg-white/4 p-2">
-            <div className="text-base font-bold text-white">{(season.minutesPlayed / 90).toFixed(0)}</div>
-            <div className="text-xs text-[#4a5568]">Apps</div>
-          </div>
-          <div className="rounded-lg bg-white/4 p-2">
-            <div className="text-base font-bold text-white">{season.leagueFinish}th</div>
-            <div className="text-xs text-[#4a5568]">League</div>
-          </div>
+          {currentRun.statVisibility[player.position].includes('minutesPlayed') && (
+            <div className="rounded-lg bg-white/4 p-2">
+              <div className="text-base font-bold text-white">{(season.minutesPlayed / 90).toFixed(0)}</div>
+              <div className="text-xs text-[#4a5568]">Apps</div>
+            </div>
+          )}
+          {currentRun.statVisibility[player.position].includes('leagueFinish') && (
+            <div className="rounded-lg bg-white/4 p-2">
+              <div className="text-base font-bold text-white">{season.leagueFinish}th</div>
+              <div className="text-xs text-[#4a5568]">League</div>
+            </div>
+          )}
         </div>
       )}
 
@@ -218,7 +230,7 @@ function TransferModal({
                   <div>
                     <div className="font-mono font-bold text-white text-lg mb-0.5">{selectedId}</div>
                     <div className="text-xs text-[#8899b4]">
-                      {selectedPlayer.nationalityFlag} Age {selectedPlayer.seasons[currentRun.currentWindow]?.age}
+                      {selectedPlayer.nationalityFlag} {currentRun.statVisibility[position].includes('age') ? `Age ${selectedPlayer.seasons[currentRun.currentWindow]?.age}` : ''}
                     </div>
                   </div>
                   <div className="text-right">

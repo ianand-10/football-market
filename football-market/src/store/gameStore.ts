@@ -73,6 +73,11 @@ export const useGameStore = create<GameStore>()(
       revealIndex: 0,
 
       startNewRun: () => {
+        try {
+          localStorage.removeItem('football-market-save');
+        } catch (e) {
+          console.error(e);
+        }
         const run = createNewRun();
         set({ currentRun: run, draftState: null, transferState: null, revealIndex: 0 });
       },
